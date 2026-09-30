@@ -18,4 +18,16 @@ export const getTrendingMovies = async () => {
   }
 };
 
+export const getMovieDetails = async (movieId) => {
+  try {
+    const response = await api.get(`/movie/${movieId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+
+    return null;
+  }
+};
+
 export default api;
