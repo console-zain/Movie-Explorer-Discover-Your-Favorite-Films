@@ -2,23 +2,34 @@ import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { getFavorites, saveFavorites } from "../../utils/localStorage";
+import {
+  getFavorites,
+  saveFavorites,
+  isFavorite,
+} from "../../utils/localStorage";
+import { useState } from "react";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
 
+  const [favorite, setFavorite] = useState(isFavorite(movie.id));
+
   const handleFavorite = (e) => {
     e.stopPropagation();
 
-    const favorites = getFavorites();
+    let favorites = getFavorites();
 
-    const exists = favorites.some((fav) => fav.id === movie.id);
+    if (favorite) {
+      favorites = favorites.filter((fav) => fav.id !== movie.id);
 
-    if (!exists) {
-      favorites.push(movie);
       saveFavorites(favorites);
+      setFavorite(false);
+    } else {
+      favorites.push(movie);
 
-      alert("Added to favorites");
+      saveFavorites(favorites);
+      setFavorite(true);
     }
   };
 
@@ -51,7 +62,7 @@ const MovieCard = ({ movie }) => {
 
       <CardContent>
         <IconButton color="error" onClick={handleFavorite}>
-          <FavoriteIcon />
+          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <Typography variant="h6">{movie.title}</Typography>
 

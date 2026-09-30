@@ -5,3 +5,9 @@ export const getFavorites = () => {
 export const saveFavorites = (favorites) => {
   localStorage.setItem("favorites", JSON.stringify(favorites));
 };
+
+export const isFavorite = (movieId) => {
+  const favorites = getFavorites();
+
+  return favorites.some((movie) => movie.id === movieId);
+};
