@@ -1,8 +1,26 @@
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { getFavorites, saveFavorites } from "../../utils/localStorage";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
+
+  const handleFavorite = (e) => {
+    e.stopPropagation();
+
+    const favorites = getFavorites();
+
+    const exists = favorites.some((fav) => fav.id === movie.id);
+
+    if (!exists) {
+      favorites.push(movie);
+      saveFavorites(favorites);
+
+      alert("Added to favorites");
+    }
+  };
 
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -32,6 +50,9 @@ const MovieCard = ({ movie }) => {
       />
 
       <CardContent>
+        <IconButton color="error" onClick={handleFavorite}>
+          <FavoriteIcon />
+        </IconButton>
         <Typography variant="h6">{movie.title}</Typography>
 
         <Typography variant="body2">

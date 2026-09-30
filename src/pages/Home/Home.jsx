@@ -38,6 +38,14 @@ const Home = () => {
         Logout
       </Button>
 
+      <Button
+        variant="contained"
+        sx={{ ml: 2 }}
+        onClick={() => navigate("/favorites")}
+      >
+        Favorites
+      </Button>
+
       <h2>Trending Movies</h2>
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
