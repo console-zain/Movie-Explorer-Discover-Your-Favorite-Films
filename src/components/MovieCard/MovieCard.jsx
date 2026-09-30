@@ -1,12 +1,16 @@
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const MovieCard = ({ movie }) => {
+  const navigate = useNavigate();
+
   const imageUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : "https://via.placeholder.com/500x750?text=No+Image";
 
   return (
     <Card
+      onClick={() => navigate(`/movie/${movie.id}`)}
       sx={{
         width: "100%",
         height: "100%",
