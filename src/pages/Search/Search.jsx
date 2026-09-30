@@ -261,6 +261,23 @@ const Search = () => {
           Results: {filteredMovies.length}
         </Typography>
 
+        {filteredMovies.length === 0 && !loading && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "40px",
+            }}
+          >
+            <Typography variant="h5" gutterBottom>
+              No movies found
+            </Typography>
+
+            <Typography color="text.secondary">
+              Try a different search term or adjust your filters.
+            </Typography>
+          </div>
+        )}
+
         <Grid container spacing={3}>
           {filteredMovies.map((movie) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>

@@ -107,14 +107,31 @@ const Home = () => {
           Trending Movies
         </Typography>
 
-        <Grid container spacing={3} sx={{ mt: 2 }}>
-          {Array.isArray(trendingMovies) &&
-            trendingMovies.map((movie) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
-                <MovieCard movie={movie} />
-              </Grid>
-            ))}
-        </Grid>
+        {trendingMovies.length === 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "40px",
+            }}
+          >
+            <Typography variant="h5">No movies available</Typography>
+
+            <Typography color="text.secondary">
+              Please try again later.
+            </Typography>
+          </div>
+        )}
+
+        {trendingMovies.length > 0 && (
+          <Grid container spacing={3} sx={{ mt: 2 }}>
+            {Array.isArray(trendingMovies) &&
+              trendingMovies.map((movie) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
+                  <MovieCard movie={movie} />
+                </Grid>
+              ))}
+          </Grid>
+        )}
 
         {hasMore &&
           Array.isArray(trendingMovies) &&

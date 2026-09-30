@@ -4,7 +4,6 @@ import { getFavorites } from "../../utils/localStorage";
 import { Typography, Grid } from "@mui/material";
 import { useMovieContext } from "../../context/MovieContext";
 
-// 📦 FIXED LINE: Import the Navbar component here!
 import Navbar from "../../components/Navbar/Navbar";
 
 const Favorites = () => {
@@ -12,13 +11,13 @@ const Favorites = () => {
 
   return (
     <>
-      {/* 🧭 FIXED LINE: Put the Navbar at the very top of the page */}
+      {}
       <Navbar />
 
       <div
         style={{
           padding: "20px",
-          paddingTop: "20px", // Changed from 90px to 20px since Navbar handles the spacing now!
+          paddingTop: "20px",
         }}
       >
         <Typography variant="h4" gutterBottom>
@@ -27,6 +26,23 @@ const Favorites = () => {
 
         {favorites.length === 0 && (
           <Typography>No favorite movies yet.</Typography>
+        )}
+
+        {favorites.length === 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "50px",
+            }}
+          >
+            <Typography variant="h5" gutterBottom>
+              No favorite movies yet
+            </Typography>
+
+            <Typography color="text.secondary">
+              Add movies from Home or Search to see them here.
+            </Typography>
+          </div>
         )}
 
         <Grid container spacing={3}>
