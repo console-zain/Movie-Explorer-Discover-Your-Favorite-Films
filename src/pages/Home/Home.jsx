@@ -5,6 +5,8 @@ import MovieCard from "../../components/MovieCard/MovieCard";
 import Navbar from "../../components/Navbar/Navbar";
 import { useMovieContext } from "../../context/MovieContext";
 import { getTrendingMovies } from "../../services/tmdbApi";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 
 const Home = () => {
   const { trendingMovies, setTrendingMovies } = useMovieContext();
@@ -13,14 +15,44 @@ const Home = () => {
 
   const username = localStorage.getItem("username");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchMovies = async () => {
-      const data = await getTrendingMovies();
-      setTrendingMovies(data);
+      try {
+        setLoading(true);
+
+        const data = await getTrendingMovies();
+
+        setTrendingMovies(data);
+      } catch (err) {
+        setError("Failed to load trending movies.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchMovies();
   }, []);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <LoadingSpinner />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <ErrorMessage message={error} />
+      </>
+    );
+  }
 
   return (
     <>

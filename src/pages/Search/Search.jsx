@@ -18,6 +18,9 @@ import { searchMovies, getGenres } from "../../services/tmdbApi";
 
 import { useMovieContext } from "../../context/MovieContext";
 
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
+
 const Search = () => {
   const [query, setQuery] = useState("");
 
@@ -29,6 +32,9 @@ const Search = () => {
   const [filteredMovies, setFilteredMovies] = useState([]);
 
   const { searchResults, setSearchResults } = useMovieContext();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const lastSearch = localStorage.getItem("lastSearch");
@@ -47,6 +53,14 @@ const Search = () => {
     loadGenres();
   }, []);
 
+  {
+    loading && <LoadingSpinner />;
+  }
+
+  {
+    error && <ErrorMessage message={error} />;
+  }
+
   useEffect(() => {
     const runLastSearch = async () => {
       const lastSearch = localStorage.getItem("lastSearch");
@@ -63,14 +77,23 @@ const Search = () => {
   }, [setSearchResults]);
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    try {
+      setLoading(true);
+      setError(null);
 
-    localStorage.setItem("lastSearch", query);
+      if (!query.trim()) return;
 
-    const data = await searchMovies(query);
+      localStorage.setItem("lastSearch", query);
 
-    setSearchResults(data.results);
-    setFilteredMovies(data.results);
+      const data = await searchMovies(query);
+
+      setSearchResults(data.results);
+      setFilteredMovies(data.results);
+    } catch (err) {
+      setError("Search failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const applyFilters = () => {
