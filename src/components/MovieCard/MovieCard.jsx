@@ -8,17 +8,21 @@ const MovieCard = ({ movie }) => {
   return (
     <Card
       sx={{
-        width: 220,
+        width: "100%",
+        height: "100%",
         transition: "0.3s",
         cursor: "pointer",
         "&:hover": {
-          transform: "scale(1.05)",
+          transform: "scale(1.03)",
         },
       }}
     >
       <CardMedia
         component="img"
-        height="350"
+        sx={{
+          height: 320,
+          objectFit: "cover",
+        }}
         image={imageUrl}
         alt={movie.title}
       />

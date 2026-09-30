@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MovieCard from "../../components/MovieCard/MovieCard";
 
@@ -40,18 +40,13 @@ const Home = () => {
 
       <h2>Trending Movies</h2>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
+      <Grid container spacing={3} sx={{ mt: 2 }}>
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
+            <MovieCard movie={movie} />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </div>
   );
 };
