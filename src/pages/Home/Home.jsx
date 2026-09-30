@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Grid, Button, Typography } from "@mui/material";
+import { Button, Typography, Box, Paper } from "@mui/material";
 
 import MovieCard from "../../components/MovieCard/MovieCard";
 import Navbar from "../../components/Navbar/Navbar";
@@ -93,62 +93,175 @@ const Home = () => {
     <>
       <Navbar />
 
-      <div
-        style={{
-          padding: "20px",
-          paddingTop: "90px",
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background: "linear-gradient(to bottom, #141414, #0f0f0f)",
+          color: "#FFFFFF",
+          pt: 14,
+          pb: 6,
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Welcome {username}
-        </Typography>
+        <Box
+          sx={{
+            maxWidth: "1700px",
+            mx: "auto",
+            px: 4,
+          }}
+        >
+          <Paper
+            elevation={0}
+            sx={{
+              p: 5,
+              mb: 6,
 
-        <Typography variant="h4" gutterBottom>
-          Trending Movies
-        </Typography>
+              borderRadius: 6,
 
-        {trendingMovies.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "40px",
+              backdropFilter: "blur(20px)",
+
+              background: "rgba(31,31,31,0.6)",
+
+              border: "1px solid rgba(255,255,255,0.08)",
+
+              boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
             }}
           >
-            <Typography variant="h5">No movies available</Typography>
-
-            <Typography color="text.secondary">
-              Please try again later.
-            </Typography>
-          </div>
-        )}
-
-        {trendingMovies.length > 0 && (
-          <Grid container spacing={3} sx={{ mt: 2 }}>
-            {Array.isArray(trendingMovies) &&
-              trendingMovies.map((movie) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
-                  <MovieCard movie={movie} />
-                </Grid>
-              ))}
-          </Grid>
-        )}
-
-        {hasMore &&
-          Array.isArray(trendingMovies) &&
-          trendingMovies.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "30px",
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 700,
+                mb: 1,
               }}
             >
-              <Button variant="contained" size="large" onClick={handleLoadMore}>
-                Load More
-              </Button>
-            </div>
+              Welcome back,
+              <span
+                style={{
+                  color: "#E50914",
+                }}
+              >
+                {" "}
+                {username}
+              </span>
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "#B3B3B3",
+                fontSize: "1.1rem",
+              }}
+            >
+              Discover trending movies, explore new releases, and build your
+              personal collection.
+            </Typography>
+          </Paper>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 4,
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+              }}
+            >
+              Trending Today
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "#B3B3B3",
+              }}
+            >
+              {trendingMovies.length} movies
+            </Typography>
+          </Box>
+
+          {trendingMovies.length === 0 && (
+            <Paper
+              sx={{
+                p: 6,
+                textAlign: "center",
+
+                background: "rgba(31,31,31,0.6)",
+
+                borderRadius: 4,
+              }}
+            >
+              <Typography variant="h5">No movies available</Typography>
+
+              <Typography
+                sx={{
+                  color: "#B3B3B3",
+                  mt: 1,
+                }}
+              >
+                Please try again later.
+              </Typography>
+            </Paper>
           )}
-      </div>
+
+          {trendingMovies.length > 0 && (
+            <Box
+              sx={{
+                maxWidth: "1600px",
+
+                mx: "auto",
+
+                display: "grid",
+
+                gridTemplateColumns: "repeat(auto-fill, minmax(230px, 230px))",
+
+                justifyContent: "center",
+
+                gap: 3,
+              }}
+            >
+              {trendingMovies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </Box>
+          )}
+
+          {hasMore && trendingMovies.length > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+
+                justifyContent: "center",
+
+                mt: 6,
+              }}
+            >
+              <Button
+                onClick={handleLoadMore}
+                variant="contained"
+                size="large"
+                sx={{
+                  px: 5,
+                  py: 1.5,
+
+                  borderRadius: "999px",
+
+                  background: "#E50914",
+
+                  fontWeight: 700,
+
+                  "&:hover": {
+                    background: "#B20710",
+                  },
+                }}
+              >
+                Load More Movies
+              </Button>
+            </Box>
+          )}
+        </Box>
+      </Box>
     </>
   );
 };

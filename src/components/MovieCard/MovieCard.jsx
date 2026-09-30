@@ -1,20 +1,23 @@
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import IconButton from "@mui/material/IconButton";
+import { useState } from "react";
+
+import { Card, CardMedia, Typography, IconButton, Box } from "@mui/material";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+import { useNavigate } from "react-router-dom";
+
 import {
   getFavorites,
   saveFavorites,
   isFavorite,
 } from "../../utils/localStorage";
-import { useState } from "react";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
 import { useMovieContext } from "../../context/MovieContext";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
 
-  // 1. Get our tools from Context (The broken lines are removed from here!)
   const { setFavorites } = useMovieContext();
 
   const [favorite, setFavorite] = useState(isFavorite(movie.id));
@@ -23,21 +26,22 @@ const MovieCard = ({ movie }) => {
     e.stopPropagation();
 
     let currentFavorites = getFavorites();
+
     let updatedList = [];
 
     if (favorite) {
-      // If already liked, remove it from the list
       updatedList = currentFavorites.filter((fav) => fav.id !== movie.id);
+
       setFavorite(false);
     } else {
-      // If not liked, add it to the list
       updatedList = [...currentFavorites, movie];
+
       setFavorite(true);
     }
 
-    // 2. Safely run these actions inside the function where updatedList exists!
-    saveFavorites(updatedList); // Saves to hard storage
-    setFavorites(updatedList); // Tells our React context to update the UI
+    saveFavorites(updatedList);
+    setFavorites(updatedList);
+
     window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
@@ -49,40 +53,139 @@ const MovieCard = ({ movie }) => {
     <Card
       onClick={() => navigate(`/movie/${movie.id}`)}
       sx={{
-        width: "100%",
-        height: "100%",
-        transition: "0.3s",
+        position: "relative",
+
+        overflow: "hidden",
+
+        borderRadius: "18px",
+
+        background: "#1F1F1F",
+
         cursor: "pointer",
+
+        transition: "all 0.3s ease",
+
+        border: "1px solid rgba(255,255,255,0.05)",
+
         "&:hover": {
-          transform: "scale(1.03)",
+          transform: "translateY(-8px) scale(1.03)",
+
+          boxShadow: "0 20px 40px rgba(0,0,0,0.45)",
+        },
+
+        "&:hover .movie-overlay": {
+          opacity: 1,
         },
       }}
     >
       <CardMedia
         component="img"
-        sx={{
-          height: 320,
-          objectFit: "cover",
-        }}
         image={imageUrl}
         alt={movie.title}
+        sx={{
+          height: 380,
+          objectFit: "cover",
+        }}
       />
 
-      <CardContent>
-        <IconButton color="error" onClick={handleFavorite}>
-          {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButton>
-        <Typography variant="h6">{movie.title}</Typography>
+      <Box
+        className="movie-overlay"
+        sx={{
+          position: "absolute",
 
-        <Typography variant="body2">
-          Year:{" "}
+          inset: 0,
+
+          opacity: 0,
+
+          transition: "opacity 0.3s ease",
+
+          background: `
+            linear-gradient(
+              to top,
+              rgba(0,0,0,0.95) 0%,
+              rgba(0,0,0,0.7) 35%,
+              rgba(0,0,0,0.15) 70%,
+              transparent 100%
+            )
+          `,
+
+          display: "flex",
+
+          flexDirection: "column",
+
+          justifyContent: "flex-end",
+
+          p: 2,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            color: "#FFFFFF",
+
+            fontWeight: 700,
+
+            overflow: "hidden",
+
+            textOverflow: "ellipsis",
+
+            whiteSpace: "nowrap",
+          }}
+        >
+          {movie.title}
+        </Typography>
+
+        <Typography
+          sx={{
+            color: "#B3B3B3",
+
+            mt: 1,
+
+            fontSize: "0.9rem",
+          }}
+        >
+          ⭐ {movie.vote_average?.toFixed(1)}
+          {" • "}
           {movie.release_date ? movie.release_date.substring(0, 4) : "N/A"}
         </Typography>
+      </Box>
 
-        <Typography variant="body2">
-          Rating: {movie.vote_average?.toFixed(1)}
-        </Typography>
-      </CardContent>
+      <IconButton
+        onClick={handleFavorite}
+        sx={{
+          position: "absolute",
+
+          right: 12,
+
+          bottom: 12,
+
+          zIndex: 20,
+
+          backdropFilter: "blur(16px)",
+
+          background: "rgba(0,0,0,0.45)",
+
+          border: "1px solid rgba(255,255,255,0.1)",
+
+          "&:hover": {
+            background: "rgba(0,0,0,0.65)",
+          },
+        }}
+      >
+        {favorite ? (
+          <FavoriteIcon
+            sx={{
+              color: "#E50914",
+            }}
+          />
+        ) : (
+          <FavoriteBorderIcon
+            sx={{
+              color: "#FFFFFF",
+            }}
+          />
+        )}
+      </IconButton>
     </Card>
   );
 };
