@@ -10,7 +10,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-import { getMovieDetails } from "../../services/tmdbApi";
+import {
+  getMovieDetails,
+  getMovieCredits,
+  getMovieVideos,
+} from "../../services/tmdbApi";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -18,11 +22,25 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [cast, setCast] = useState([]);
+  const [trailer, setTrailer] = useState(null);
+
   useEffect(() => {
     const fetchMovie = async () => {
-      const data = await getMovieDetails(id);
+      const movieData = await getMovieDetails(id);
+      const castData = await getMovieCredits(id);
+      const videoData = await getMovieVideos(id);
 
-      setMovie(data);
+      console.log(videoData);
+
+      const officialTrailer = videoData.find(
+        (video) => video.type === "Trailer" && video.site === "YouTube",
+      );
+
+      setMovie(movieData);
+      setCast(castData.slice(0, 10));
+      setTrailer(officialTrailer);
+
       setLoading(false);
     };
 
@@ -86,6 +104,56 @@ const MovieDetails = () => {
         {movie.genres.map((genre) => (
           <Chip key={genre.id} label={genre.name} sx={{ mr: 1, mt: 1 }} />
         ))}
+
+        <Typography variant="h6" sx={{ mt: 4 }}>
+          Cast
+        </Typography>
+
+        {cast.map((actor) => (
+          <Chip
+            key={actor.cast_id || actor.id}
+            label={actor.name}
+            sx={{ mr: 1, mt: 1 }}
+          />
+        ))}
+
+        {/* 🎬 FIXED TRAILER CODE BELOW */}
+        <div style={{ marginTop: "30px" }}>
+          <Typography variant="h6" gutterBottom>
+            Official Trailer
+          </Typography>
+          {trailer ? (
+            <div
+              style={{
+                position: "relative",
+                paddingBottom: "56.25%",
+                height: 0,
+                overflow: "hidden",
+                maxWidth: "100%",
+                borderRadius: "8px",
+              }}
+            >
+              <iframe
+                title="movie-trailer"
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </div>
+          ) : (
+            <Typography sx={{ mt: 1, color: "text.secondary" }}>
+              No trailer available for this movie.
+            </Typography>
+          )}
+        </div>
       </Card>
     </Container>
   );

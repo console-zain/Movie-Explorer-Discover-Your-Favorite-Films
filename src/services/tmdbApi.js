@@ -30,4 +30,28 @@ export const getMovieDetails = async (movieId) => {
   }
 };
 
+export const getMovieCredits = async (movieId) => {
+  try {
+    const response = await api.get(`/movie/${movieId}/credits`);
+
+    return response.data.cast;
+  } catch (error) {
+    console.error("Error fetching credits:", error);
+
+    return [];
+  }
+};
+
+export const getMovieVideos = async (movieId) => {
+  try {
+    const response = await api.get(`/movie/${movieId}/videos`);
+
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching videos:", error);
+
+    return [];
+  }
+};
+
 export default api;
