@@ -75,4 +75,10 @@ export const searchMovies = async (query, page = 1) => {
   }
 };
 
+export const getGenres = async () => {
+  const response = await api.get("/genre/movie/list");
+
+  return response.data.genres;
+};
+
 export default api;
