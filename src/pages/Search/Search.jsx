@@ -31,10 +31,13 @@ const Search = () => {
   const [genres, setGenres] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
 
-  const { searchResults, setSearchResults } = useMovieContext();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const { searchResults, setSearchResults } = useMovieContext();
 
   useEffect(() => {
     const lastSearch = localStorage.getItem("lastSearch");
@@ -53,46 +56,67 @@ const Search = () => {
     loadGenres();
   }, []);
 
-  {
-    loading && <LoadingSpinner />;
-  }
-
-  {
-    error && <ErrorMessage message={error} />;
-  }
-
   useEffect(() => {
     const runLastSearch = async () => {
       const lastSearch = localStorage.getItem("lastSearch");
 
       if (!lastSearch) return;
 
-      const data = await searchMovies(lastSearch);
+      try {
+        const data = await searchMovies(lastSearch, 1);
 
-      setSearchResults(data.results);
-      setFilteredMovies(data.results);
+        setSearchResults(data.results);
+        setFilteredMovies(data.results);
+
+        setHasMore(data.page < data.total_pages);
+      } catch (err) {
+        setError("Failed to load previous search.");
+      }
     };
 
     runLastSearch();
   }, [setSearchResults]);
 
   const handleSearch = async () => {
+    if (!query.trim()) return;
+
     try {
       setLoading(true);
       setError(null);
 
-      if (!query.trim()) return;
-
       localStorage.setItem("lastSearch", query);
 
-      const data = await searchMovies(query);
+      setPage(1);
+
+      const data = await searchMovies(query, 1);
 
       setSearchResults(data.results);
       setFilteredMovies(data.results);
+
+      setHasMore(data.page < data.total_pages);
     } catch (err) {
       setError("Search failed.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    try {
+      const nextPage = page + 1;
+
+      const data = await searchMovies(query, nextPage);
+
+      const updatedMovies = [...searchResults, ...data.results];
+
+      setPage(nextPage);
+
+      setSearchResults(updatedMovies);
+      setFilteredMovies(updatedMovies);
+
+      setHasMore(nextPage < data.total_pages);
+    } catch (err) {
+      setError("Failed to load more movies.");
     }
   };
 
@@ -152,6 +176,10 @@ const Search = () => {
           Search
         </Button>
 
+        {loading && <LoadingSpinner />}
+
+        {error && <ErrorMessage message={error} />}
+
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} md={4}>
             <FormControl fullWidth>
@@ -185,17 +213,11 @@ const Search = () => {
                 <MenuItem value="">All</MenuItem>
 
                 <MenuItem value="2026">2026</MenuItem>
-
                 <MenuItem value="2025">2025</MenuItem>
-
                 <MenuItem value="2024">2024</MenuItem>
-
                 <MenuItem value="2023">2023</MenuItem>
-
                 <MenuItem value="2022">2022</MenuItem>
-
                 <MenuItem value="2021">2021</MenuItem>
-
                 <MenuItem value="2020">2020</MenuItem>
               </Select>
             </FormControl>
@@ -246,6 +268,20 @@ const Search = () => {
             </Grid>
           ))}
         </Grid>
+
+        {hasMore && filteredMovies.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "30px",
+            }}
+          >
+            <Button variant="contained" size="large" onClick={handleLoadMore}>
+              Load More
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );
