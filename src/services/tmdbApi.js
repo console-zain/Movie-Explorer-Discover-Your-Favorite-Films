@@ -54,4 +54,25 @@ export const getMovieVideos = async (movieId) => {
   }
 };
 
+export const searchMovies = async (query, page = 1) => {
+  try {
+    const response = await api.get("/search/movie", {
+      params: {
+        query,
+        page,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching movies:", error);
+
+    return {
+      results: [],
+      page: 1,
+      total_pages: 1,
+    };
+  }
+};
+
 export default api;

@@ -1,61 +1,45 @@
 import { useEffect, useState } from "react";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MovieCard from "../../components/MovieCard/MovieCard";
-
+import Navbar from "../../components/Navbar/Navbar";
+import { useMovieContext } from "../../context/MovieContext";
 import { getTrendingMovies } from "../../services/tmdbApi";
 
 const Home = () => {
-  const navigate = useNavigate();
+  const { trendingMovies, setTrendingMovies } = useMovieContext();
 
-  const [movies, setMovies] = useState([]);
+  const navigate = useNavigate();
 
   const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchMovies = async () => {
       const data = await getTrendingMovies();
-      setMovies(data);
+      setTrendingMovies(data);
     };
 
     fetchMovies();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("username");
-
-    navigate("/");
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Home Page</h1>
+    <>
+      <Navbar />
 
-      <h2>Welcome {username}</h2>
+      <div style={{ padding: "20px" }}>
+        <h2>Welcome {username}</h2>
 
-      <Button variant="contained" color="error" onClick={handleLogout}>
-        Logout
-      </Button>
+        <h2>Trending Movies</h2>
 
-      <Button
-        variant="contained"
-        sx={{ ml: 2 }}
-        onClick={() => navigate("/favorites")}
-      >
-        Favorites
-      </Button>
-
-      <h2>Trending Movies</h2>
-
-      <Grid container spacing={3} sx={{ mt: 2 }}>
-        {movies.map((movie) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
-            <MovieCard movie={movie} />
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          {trendingMovies.map((movie) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={movie.id}>
+              <MovieCard movie={movie} />
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+    </>
   );
 };
 

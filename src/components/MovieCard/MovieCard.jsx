@@ -9,28 +9,36 @@ import {
 } from "../../utils/localStorage";
 import { useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useMovieContext } from "../../context/MovieContext";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
+
+  // 1. Get our tools from Context (The broken lines are removed from here!)
+  const { setFavorites } = useMovieContext();
 
   const [favorite, setFavorite] = useState(isFavorite(movie.id));
 
   const handleFavorite = (e) => {
     e.stopPropagation();
 
-    let favorites = getFavorites();
+    let currentFavorites = getFavorites();
+    let updatedList = [];
 
     if (favorite) {
-      favorites = favorites.filter((fav) => fav.id !== movie.id);
-
-      saveFavorites(favorites);
+      // If already liked, remove it from the list
+      updatedList = currentFavorites.filter((fav) => fav.id !== movie.id);
       setFavorite(false);
     } else {
-      favorites.push(movie);
-
-      saveFavorites(favorites);
+      // If not liked, add it to the list
+      updatedList = [...currentFavorites, movie];
       setFavorite(true);
     }
+
+    // 2. Safely run these actions inside the function where updatedList exists!
+    saveFavorites(updatedList); // Saves to hard storage
+    setFavorites(updatedList); // Tells our React context to update the UI
+    window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
   const imageUrl = movie.poster_path

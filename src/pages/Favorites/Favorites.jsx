@@ -6,22 +6,10 @@ import { getFavorites } from "../../utils/localStorage";
 
 import { Typography, Grid } from "@mui/material";
 
+import { useMovieContext } from "../../context/MovieContext";
+
 const Favorites = () => {
-  const [favorites, setFavorites] = useState([]);
-
-  useEffect(() => {
-    const loadFavorites = () => {
-      setFavorites(getFavorites());
-    };
-
-    loadFavorites();
-
-    window.addEventListener("storage", loadFavorites);
-
-    return () => {
-      window.removeEventListener("storage", loadFavorites);
-    };
-  }, []);
+  const { favorites } = useMovieContext();
 
   return (
     <div style={{ padding: "20px" }}>
