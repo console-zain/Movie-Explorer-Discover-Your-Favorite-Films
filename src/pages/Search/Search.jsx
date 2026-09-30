@@ -1,13 +1,34 @@
-import { TextField, Button, Typography, Grid } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+
 import { useState, useEffect } from "react";
+
 import Navbar from "../../components/Navbar/Navbar";
 import MovieCard from "../../components/MovieCard/MovieCard";
-import { searchMovies } from "../../services/tmdbApi";
+
+import { searchMovies, getGenres } from "../../services/tmdbApi";
+
 import { useMovieContext } from "../../context/MovieContext";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 const Search = () => {
   const [query, setQuery] = useState("");
+
+  const [genre, setGenre] = useState("");
+  const [year, setYear] = useState("");
+  const [rating, setRating] = useState("");
+
+  const [genres, setGenres] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+
+  const { searchResults, setSearchResults } = useMovieContext();
 
   useEffect(() => {
     const lastSearch = localStorage.getItem("lastSearch");
@@ -17,7 +38,14 @@ const Search = () => {
     }
   }, []);
 
-  const { searchResults, setSearchResults } = useMovieContext();
+  useEffect(() => {
+    const loadGenres = async () => {
+      const genreData = await getGenres();
+      setGenres(genreData);
+    };
+
+    loadGenres();
+  }, []);
 
   useEffect(() => {
     const runLastSearch = async () => {
@@ -28,14 +56,11 @@ const Search = () => {
       const data = await searchMovies(lastSearch);
 
       setSearchResults(data.results);
+      setFilteredMovies(data.results);
     };
 
     runLastSearch();
-  }, []);
-
-  const [genre, setGenre] = useState("");
-  const [year, setYear] = useState("");
-  const [rating, setRating] = useState("");
+  }, [setSearchResults]);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -45,17 +70,30 @@ const Search = () => {
     const data = await searchMovies(query);
 
     setSearchResults(data.results);
+    setFilteredMovies(data.results);
   };
 
-  const filteredMovies = searchResults.filter((movie) => {
-    const genreMatch = !genre || movie.genre_names?.includes(genre);
+  const applyFilters = () => {
+    const filtered = searchResults.filter((movie) => {
+      const genreMatch = !genre || movie.genre_ids?.includes(Number(genre));
 
-    const yearMatch = !year || movie.release_date?.startsWith(year);
+      const yearMatch = !year || movie.release_date?.startsWith(year);
 
-    const ratingMatch = !rating || movie.vote_average >= Number(rating);
+      const ratingMatch = !rating || movie.vote_average >= Number(rating);
 
-    return genreMatch && yearMatch && ratingMatch;
-  });
+      return genreMatch && yearMatch && ratingMatch;
+    });
+
+    setFilteredMovies(filtered);
+  };
+
+  const clearFilters = () => {
+    setGenre("");
+    setYear("");
+    setRating("");
+
+    setFilteredMovies(searchResults);
+  };
 
   return (
     <>
@@ -80,13 +118,13 @@ const Search = () => {
 
         <Button
           variant="contained"
-          sx={{ mt: 2, mb: 4 }}
+          sx={{ mt: 2, mb: 3 }}
           onClick={handleSearch}
         >
           Search
         </Button>
 
-        <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+        <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} md={4}>
             <FormControl fullWidth>
               <InputLabel>Genre</InputLabel>
@@ -98,13 +136,11 @@ const Search = () => {
               >
                 <MenuItem value="">All</MenuItem>
 
-                <MenuItem value="Action">Action</MenuItem>
-
-                <MenuItem value="Comedy">Comedy</MenuItem>
-
-                <MenuItem value="Drama">Drama</MenuItem>
-
-                <MenuItem value="Adventure">Adventure</MenuItem>
+                {genres.map((genreItem) => (
+                  <MenuItem key={genreItem.id} value={genreItem.id}>
+                    {genreItem.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -121,10 +157,18 @@ const Search = () => {
                 <MenuItem value="">All</MenuItem>
 
                 <MenuItem value="2026">2026</MenuItem>
+
                 <MenuItem value="2025">2025</MenuItem>
+
                 <MenuItem value="2024">2024</MenuItem>
+
                 <MenuItem value="2023">2023</MenuItem>
+
                 <MenuItem value="2022">2022</MenuItem>
+
+                <MenuItem value="2021">2021</MenuItem>
+
+                <MenuItem value="2020">2020</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -149,6 +193,23 @@ const Search = () => {
             </FormControl>
           </Grid>
         </Grid>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ mr: 2, mb: 4 }}
+          onClick={applyFilters}
+        >
+          Apply Filters
+        </Button>
+
+        <Button variant="outlined" sx={{ mb: 4 }} onClick={clearFilters}>
+          Clear Filters
+        </Button>
+
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          Results: {filteredMovies.length}
+        </Typography>
 
         <Grid container spacing={3}>
           {filteredMovies.map((movie) => (
