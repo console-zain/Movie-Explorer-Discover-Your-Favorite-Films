@@ -10,7 +10,7 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
-
+import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 
 import Navbar from "../../components/Navbar/Navbar";
@@ -107,6 +107,8 @@ const Search = () => {
     }
   };
 
+  const theme = useTheme();
+
   const handleLoadMore = async () => {
     try {
       const nextPage = page + 1;
@@ -156,8 +158,8 @@ const Search = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(to bottom, #141414, #0f0f0f)",
-          color: "#FFFFFF",
+          background: theme.palette.background.default,
+          color: theme.palette.text.primary,
           pt: 14,
           pb: 6,
         }}
@@ -179,11 +181,9 @@ const Search = () => {
 
               backdropFilter: "blur(20px)",
 
-              background: "rgba(31,31,31,0.6)",
-
-              border: "1px solid rgba(255,255,255,0.08)",
-
-              boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+              background: theme.palette.background.paper,
+              border: `1px solid ${theme.palette.divider}`,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
             }}
           >
             <Typography
@@ -198,7 +198,7 @@ const Search = () => {
 
             <Typography
               sx={{
-                color: "#B3B3B3",
+                color: theme.palette.text.secondary,
                 mb: 4,
               }}
             >
@@ -260,7 +260,7 @@ const Search = () => {
 
             <Typography
               sx={{
-                color: "#B3B3B3",
+                color: theme.palette.text.secondary,
               }}
             >
               {filteredMovies.length} movies
@@ -277,9 +277,8 @@ const Search = () => {
 
               backdropFilter: "blur(20px)",
 
-              background: "rgba(31,31,31,0.6)",
-
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: theme.palette.background.paper,
+              border: `1px solid ${theme.palette.divider}`,
             }}
           >
             <Typography
@@ -387,15 +386,15 @@ const Search = () => {
                 p: 5,
                 textAlign: "center",
                 borderRadius: 6,
-                background: "rgba(31,31,31,0.45)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: theme.palette.background.paper,
+                border: `1px solid ${theme.palette.divider}`,
               }}
             >
               <Typography variant="h4">No movies found</Typography>
 
               <Typography
                 sx={{
-                  color: "#B3B3B3",
+                  color: theme.palette.text.secondary,
                   mt: 2,
                 }}
               >

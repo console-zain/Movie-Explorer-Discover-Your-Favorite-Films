@@ -9,10 +9,14 @@ import {
   Box,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const theme = useTheme();
 
   const [username, setUsername] = useState("");
 
@@ -70,11 +74,11 @@ const Login = () => {
 
             backdropFilter: "blur(20px)",
 
-            background: "rgba(31,31,31,0.65)",
+            background: theme.palette.background.paper,
 
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: `1px solid ${theme.palette.divider}`,
 
-            boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
           }}
         >
           <Typography
@@ -92,7 +96,7 @@ const Login = () => {
 
           <Typography
             sx={{
-              color: "#B3B3B3",
+              color: theme.palette.text.secondary,
 
               mb: 4,
             }}

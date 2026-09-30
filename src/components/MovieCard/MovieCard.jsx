@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { Card, CardMedia, Typography, IconButton, Box } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
@@ -18,6 +20,8 @@ import { useMovieContext } from "../../context/MovieContext";
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
 
+  const theme = useTheme();
+
   const { setFavorites } = useMovieContext();
 
   const [favorite, setFavorite] = useState(isFavorite(movie.id));
@@ -25,7 +29,7 @@ const MovieCard = ({ movie }) => {
   const handleFavorite = (e) => {
     e.stopPropagation();
 
-    let currentFavorites = getFavorites();
+    const currentFavorites = getFavorites();
 
     let updatedList = [];
 
@@ -40,6 +44,7 @@ const MovieCard = ({ movie }) => {
     }
 
     saveFavorites(updatedList);
+
     setFavorites(updatedList);
 
     window.dispatchEvent(new Event("favoritesUpdated"));
@@ -59,13 +64,13 @@ const MovieCard = ({ movie }) => {
 
         borderRadius: "18px",
 
-        background: "#1F1F1F",
+        background: theme.palette.background.paper,
 
         cursor: "pointer",
 
         transition: "all 0.3s ease",
 
-        border: "1px solid rgba(255,255,255,0.05)",
+        border: `1px solid ${theme.palette.divider}`,
 
         "&:hover": {
           transform: "translateY(-8px) scale(1.03)",
@@ -121,7 +126,7 @@ const MovieCard = ({ movie }) => {
         <Typography
           variant="h6"
           sx={{
-            color: "#FFFFFF",
+            color: theme.palette.text.primary,
 
             fontWeight: 700,
 
@@ -137,7 +142,7 @@ const MovieCard = ({ movie }) => {
 
         <Typography
           sx={{
-            color: "#B3B3B3",
+            color: theme.palette.text.secondary,
 
             mt: 1,
 
@@ -165,7 +170,7 @@ const MovieCard = ({ movie }) => {
 
           background: "rgba(0,0,0,0.45)",
 
-          border: "1px solid rgba(255,255,255,0.1)",
+          border: `1px solid ${theme.palette.divider}`,
 
           "&:hover": {
             background: "rgba(0,0,0,0.65)",
@@ -181,7 +186,7 @@ const MovieCard = ({ movie }) => {
         ) : (
           <FavoriteBorderIcon
             sx={{
-              color: "#FFFFFF",
+              color: "#fff",
             }}
           />
         )}

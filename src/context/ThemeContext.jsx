@@ -40,15 +40,13 @@ export const ThemeProviderCustom = ({ children }) => {
 
             secondary: mode === "dark" ? "#B3B3B3" : "#666666",
           },
+
+          divider:
+            mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)",
         },
 
         typography: {
-          fontFamily: `
-            Inter,
-            Poppins,
-            Roboto,
-            sans-serif
-          `,
+          fontFamily: "Inter, Poppins, Roboto, sans-serif",
 
           h1: {
             fontWeight: 800,
@@ -105,9 +103,7 @@ export const ThemeProviderCustom = ({ children }) => {
             styleOverrides: {
               root: {
                 borderRadius: 9999,
-
                 fontWeight: 700,
-
                 paddingInline: 24,
               },
             },
@@ -125,6 +121,14 @@ export const ThemeProviderCustom = ({ children }) => {
             styleOverrides: {
               root: {
                 boxShadow: "none",
+              },
+            },
+          },
+
+          MuiTextField: {
+            styleOverrides: {
+              root: {
+                width: "100%",
               },
             },
           },

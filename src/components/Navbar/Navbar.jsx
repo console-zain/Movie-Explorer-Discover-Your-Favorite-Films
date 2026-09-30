@@ -11,13 +11,18 @@ import {
   Avatar,
 } from "@mui/material";
 
+import { useTheme } from "@mui/material/styles";
+
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { useThemeContext } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
   const location = useLocation();
+
+  const theme = useTheme();
 
   const username = localStorage.getItem("username") || "User";
 
@@ -35,16 +40,24 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
+
     localStorage.removeItem("username");
 
     navigate("/");
   };
 
   const navButtonStyle = (path) => ({
-    color: location.pathname === path ? "#FFFFFF" : "#B3B3B3",
+    color:
+      location.pathname === path
+        ? theme.palette.text.primary
+        : theme.palette.text.secondary,
 
     background:
-      location.pathname === path ? "rgba(255,255,255,0.12)" : "transparent",
+      location.pathname === path
+        ? mode === "dark"
+          ? "rgba(255,255,255,0.12)"
+          : "rgba(0,0,0,0.08)"
+        : "transparent",
 
     borderRadius: "999px",
 
@@ -55,8 +68,10 @@ const Navbar = () => {
     fontWeight: 600,
 
     "&:hover": {
-      background: "rgba(255,255,255,0.12)",
-      color: "#FFFFFF",
+      background:
+        mode === "dark" ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)",
+
+      color: theme.palette.text.primary,
     },
   });
 
@@ -66,9 +81,13 @@ const Navbar = () => {
       elevation={0}
       sx={{
         background: "transparent",
+
         boxShadow: "none",
+
         display: "flex",
+
         alignItems: "center",
+
         pt: 2,
       }}
     >
@@ -84,11 +103,12 @@ const Navbar = () => {
 
           backdropFilter: "blur(20px)",
 
-          background: "rgba(31,31,31,0.75)",
+          background:
+            mode === "dark" ? "rgba(31,31,31,0.75)" : "rgba(255,255,255,0.75)",
 
-          border: "1px solid rgba(255,255,255,0.08)",
+          border: `1px solid ${theme.palette.divider}`,
 
-          boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
         }}
       >
         <Typography
@@ -131,7 +151,7 @@ const Navbar = () => {
           <Button
             onClick={handleMenuOpen}
             sx={{
-              color: "#FFFFFF",
+              color: theme.palette.text.primary,
 
               borderRadius: "999px",
 
@@ -140,13 +160,17 @@ const Navbar = () => {
               px: 1.5,
 
               "&:hover": {
-                background: "rgba(255,255,255,0.08)",
+                background:
+                  mode === "dark"
+                    ? "rgba(255,255,255,0.08)"
+                    : "rgba(0,0,0,0.06)",
               },
             }}
           >
             <Avatar
               sx={{
                 width: 32,
+
                 height: 32,
 
                 mr: 1,
@@ -172,11 +196,11 @@ const Navbar = () => {
 
                 backdropFilter: "blur(20px)",
 
-                background: "rgba(31,31,31,0.95)",
+                background: theme.palette.background.paper,
 
-                border: "1px solid rgba(255,255,255,0.08)",
+                border: `1px solid ${theme.palette.divider}`,
 
-                color: "#FFFFFF",
+                color: theme.palette.text.primary,
 
                 borderRadius: 3,
               },

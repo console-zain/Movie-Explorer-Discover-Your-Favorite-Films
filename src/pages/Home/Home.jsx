@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Button, Typography, Box, Paper } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import MovieCard from "../../components/MovieCard/MovieCard";
 import Navbar from "../../components/Navbar/Navbar";
@@ -14,6 +15,8 @@ import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 
 const Home = () => {
   const { trendingMovies, setTrendingMovies } = useMovieContext();
+
+  const theme = useTheme();
 
   const username = localStorage.getItem("username");
 
@@ -96,16 +99,22 @@ const Home = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(to bottom, #141414, #0f0f0f)",
-          color: "#FFFFFF",
+
+          background: theme.palette.background.default,
+
+          color: theme.palette.text.primary,
+
           pt: 14,
+
           pb: 6,
         }}
       >
         <Box
           sx={{
             maxWidth: "1700px",
+
             mx: "auto",
+
             px: 4,
           }}
         >
@@ -113,23 +122,25 @@ const Home = () => {
             elevation={0}
             sx={{
               p: 5,
+
               mb: 6,
 
               borderRadius: 6,
 
               backdropFilter: "blur(20px)",
 
-              background: "rgba(31,31,31,0.6)",
+              background: theme.palette.background.paper,
 
-              border: "1px solid rgba(255,255,255,0.08)",
+              border: `1px solid ${theme.palette.divider}`,
 
-              boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
             }}
           >
             <Typography
               variant="h3"
               sx={{
                 fontWeight: 700,
+
                 mb: 1,
               }}
             >
@@ -146,7 +157,8 @@ const Home = () => {
 
             <Typography
               sx={{
-                color: "#B3B3B3",
+                color: theme.palette.text.secondary,
+
                 fontSize: "1.1rem",
               }}
             >
@@ -158,8 +170,11 @@ const Home = () => {
           <Box
             sx={{
               display: "flex",
+
               alignItems: "center",
+
               justifyContent: "space-between",
+
               mb: 4,
             }}
           >
@@ -174,7 +189,7 @@ const Home = () => {
 
             <Typography
               sx={{
-                color: "#B3B3B3",
+                color: theme.palette.text.secondary,
               }}
             >
               {trendingMovies.length} movies
@@ -183,11 +198,15 @@ const Home = () => {
 
           {trendingMovies.length === 0 && (
             <Paper
+              elevation={0}
               sx={{
                 p: 6,
+
                 textAlign: "center",
 
-                background: "rgba(31,31,31,0.6)",
+                background: theme.palette.background.paper,
+
+                border: `1px solid ${theme.palette.divider}`,
 
                 borderRadius: 4,
               }}
@@ -196,11 +215,12 @@ const Home = () => {
 
               <Typography
                 sx={{
-                  color: "#B3B3B3",
+                  color: theme.palette.text.secondary,
+
                   mt: 1,
                 }}
               >
-                Please try again later.
+                Please try again later or check your internet connection.
               </Typography>
             </Paper>
           )}
@@ -208,15 +228,9 @@ const Home = () => {
           {trendingMovies.length > 0 && (
             <Box
               sx={{
-                maxWidth: "1600px",
-
-                mx: "auto",
-
                 display: "grid",
 
-                gridTemplateColumns: "repeat(auto-fill, minmax(230px, 230px))",
-
-                justifyContent: "center",
+                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
 
                 gap: 3,
               }}
@@ -234,29 +248,20 @@ const Home = () => {
 
                 justifyContent: "center",
 
-                mt: 6,
+                mt: 5,
               }}
             >
               <Button
-                onClick={handleLoadMore}
                 variant="contained"
-                size="large"
+                onClick={handleLoadMore}
                 sx={{
-                  px: 5,
+                  px: 4,
                   py: 1.5,
-
-                  borderRadius: "999px",
-
-                  background: "#E50914",
-
+                  borderRadius: 999,
                   fontWeight: 700,
-
-                  "&:hover": {
-                    background: "#B20710",
-                  },
                 }}
               >
-                Load More Movies
+                Load More
               </Button>
             </Box>
           )}

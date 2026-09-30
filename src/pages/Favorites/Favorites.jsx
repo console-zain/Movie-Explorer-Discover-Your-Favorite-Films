@@ -1,4 +1,5 @@
 import { Typography, Box, Paper } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import MovieCard from "../../components/MovieCard/MovieCard";
 import Navbar from "../../components/Navbar/Navbar";
@@ -8,6 +9,8 @@ import { useMovieContext } from "../../context/MovieContext";
 const Favorites = () => {
   const { favorites } = useMovieContext();
 
+  const theme = useTheme();
+
   return (
     <>
       <Navbar />
@@ -15,10 +18,15 @@ const Favorites = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(to bottom, #141414, #0f0f0f)",
-          color: "#FFFFFF",
+
+          background: theme.palette.background.default,
+
+          color: theme.palette.text.primary,
+
           px: 4,
+
           pt: 14,
+
           pb: 6,
         }}
       >
@@ -26,17 +34,18 @@ const Favorites = () => {
           elevation={0}
           sx={{
             p: 5,
+
             mb: 6,
 
             borderRadius: 6,
 
             backdropFilter: "blur(20px)",
 
-            background: "rgba(31,31,31,0.6)",
+            background: theme.palette.background.paper,
 
-            border: "1px solid rgba(255,255,255,0.08)",
+            border: `1px solid ${theme.palette.divider}`,
 
-            boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
           }}
         >
           <Typography
@@ -51,7 +60,8 @@ const Favorites = () => {
 
           <Typography
             sx={{
-              color: "#B3B3B3",
+              color: theme.palette.text.secondary,
+
               fontSize: "1.1rem",
             }}
           >
@@ -61,7 +71,9 @@ const Favorites = () => {
           <Typography
             sx={{
               mt: 2,
+
               color: "#E50914",
+
               fontWeight: 600,
             }}
           >
@@ -71,15 +83,17 @@ const Favorites = () => {
 
         {favorites.length === 0 ? (
           <Paper
+            elevation={0}
             sx={{
               p: 8,
-              textAlign: "center",
 
-              background: "rgba(31,31,31,0.6)",
+              textAlign: "center",
 
               borderRadius: 6,
 
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: theme.palette.background.paper,
+
+              border: `1px solid ${theme.palette.divider}`,
             }}
           >
             <Typography variant="h4" gutterBottom>
@@ -88,7 +102,7 @@ const Favorites = () => {
 
             <Typography
               sx={{
-                color: "#B3B3B3",
+                color: theme.palette.text.secondary,
               }}
             >
               Add movies using the heart icon from Home or Search.
