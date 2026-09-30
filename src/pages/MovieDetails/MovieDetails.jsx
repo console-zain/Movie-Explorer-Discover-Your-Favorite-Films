@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 import {
   Container,
@@ -24,6 +27,8 @@ const MovieDetails = () => {
 
   const [cast, setCast] = useState([]);
   const [trailer, setTrailer] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -66,7 +71,14 @@ const MovieDetails = () => {
   const posterUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container sx={{ mt: 12 }}>
+      <Button
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+        sx={{ mb: 2 }}
+      >
+        Back
+      </Button>
       <Card sx={{ p: 3 }}>
         <CardMedia
           component="img"

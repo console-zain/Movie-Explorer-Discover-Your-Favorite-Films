@@ -26,7 +26,12 @@ const Home = () => {
     <>
       <Navbar />
 
-      <div style={{ padding: "20px" }}>
+      <div
+        style={{
+          padding: "20px",
+          paddingTop: "90px",
+        }}
+      >
         <h2>Welcome {username}</h2>
 
         <h2>Trending Movies</h2>

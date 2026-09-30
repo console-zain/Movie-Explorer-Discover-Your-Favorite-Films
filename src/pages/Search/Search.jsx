@@ -99,7 +99,12 @@ const Search = () => {
     <>
       <Navbar />
 
-      <div style={{ padding: "20px" }}>
+      <div
+        style={{
+          padding: "20px",
+          paddingTop: "90px",
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Search Movies
         </Typography>

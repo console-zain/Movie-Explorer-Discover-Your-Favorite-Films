@@ -37,10 +37,13 @@ const Navbar = () => {
 
   return (
     <AppBar
-      position="sticky"
+      position="fixed"
       elevation={4}
       sx={{
         top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1200,
       }}
     >
       <Toolbar>
